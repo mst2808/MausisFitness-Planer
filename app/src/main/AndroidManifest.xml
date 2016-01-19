@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.marcus.mausisfitness_planer">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        <activity android:name=".MausisFitnessAppMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GewichtActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.example.tabmenu.Tab2Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".HinzufuegenSportActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.example.restaurant.Tab2Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SportActivity"
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="com.example.tabmenu.Tab3Activity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".HinzufuegenGewichtActivity"
+            android:label="@string/title_activity_hinzufuegen_gewicht"></activity>
+    </application>
+
+</manifest>

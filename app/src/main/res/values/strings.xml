@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Mausi\'s Fitness-Planer</string>
+    <string name="title_activity_sport">SportActivity</string>
+    <string name="title_activity_gewicht">GewichtActivity</string>
+    <string name="title_activity_hinzufuegen">HinzufuegenActivity</string>
+    <string name="title_activity_hinzufuegen_gewicht">HinzufuegenGewichtActivity</string>
+</resources>
