@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class GewichtActivity extends Activity {
 
     public static final String TAG_GEWICHT = "gewicht";
-    public static final String TAG_DATE = "gewicht";
+    public static final String TAG_DATE = "milis";
     public static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
 
@@ -58,7 +58,7 @@ public class GewichtActivity extends Activity {
             tvDate.setTextSize(20f);
 
             TextView tvValue = new TextView(this.getApplicationContext());
-            tvValue.setText("" + data.getStringExtra(TAG_GEWICHT));
+            tvValue.setText("" + data.getDoubleExtra(TAG_GEWICHT, 1.1));
             tvValue.setLayoutParams(params);
             tvValue.setTextSize(20f);
 

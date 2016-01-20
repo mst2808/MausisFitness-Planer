@@ -28,7 +28,9 @@ public class HinzufuegenGewichtActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                intent.putExtra(GewichtActivity.TAG_GEWICHT, etGewicht.getText().toString());
+                Double temp = Double.parseDouble(etGewicht.getText().toString());
+
+                intent.putExtra(GewichtActivity.TAG_GEWICHT, temp);
                 intent.putExtra(GewichtActivity.TAG_DATE, System.currentTimeMillis());
                 setResult(Activity.RESULT_OK, intent);
                 finish();

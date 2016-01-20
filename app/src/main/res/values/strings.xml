@@ -4,4 +4,11 @@
     <string name="title_activity_gewicht">GewichtActivity</string>
     <string name="title_activity_hinzufuegen">HinzufuegenActivity</string>
     <string name="title_activity_hinzufuegen_gewicht">HinzufuegenGewichtActivity</string>
+
+    <string-array name="spType">
+        <item>Fahrrad</item>
+        <item>Schwimmen</item>
+        <item>Stepper</item>
+    </string-array>
+
 </resources>

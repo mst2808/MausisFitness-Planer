@@ -17,22 +17,72 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Dauer Fahrrad"
-            android:id="@+id/textView2" />
+            android:text="Bitte geben Sie das die Dauer an!"
+            android:id="@+id/tvInformation" />
     </TableRow>
 
     <TableRow
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/rowValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rowType"
         android:layout_weight="1">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Dauer Stepper"
-            android:id="@+id/textView3" />
+            android:text="Sportart"
+            android:id="@+id/tvType"
+            android:layout_weight="1"/>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spType"
+            android:layout_weight="1"
+            android:entries="@array/spType"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rowValue"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Dauer"
+            android:id="@+id/tvDauer"
+            android:layout_weight="1"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/etDauer"
+            android:layout_weight="1"/>
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="8">
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAddSport"
+            android:text="Gewicht Hinzufügen"/>
+
+
     </TableRow>
 
 
