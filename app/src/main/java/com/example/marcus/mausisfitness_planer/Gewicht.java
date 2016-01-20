@@ -8,9 +8,9 @@ public class Gewicht {
     private double gewicht;
     private long dateMillis;
 
-    public Gewicht(double gewicht) {
+    public Gewicht(double gewicht, long dateMillis) {
         this.gewicht = gewicht;
-        this.dateMillis = System.currentTimeMillis();
+        this.dateMillis = dateMillis;
     }
 
     public double getGewicht() {

@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="neues Gewicht eintragen"
-        android:id="@+id/button"
+        android:id="@+id/buttonGewichtHinzufuegen"
         android:layout_gravity="center_horizontal"
         android:layout_weight="1"/>
 </LinearLayout>
