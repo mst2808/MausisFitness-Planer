@@ -2,6 +2,7 @@ package com.example.marcus.mausisfitness_planer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,32 +51,7 @@ public class SportActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == Activity.RESULT_OK) {
-            sportAktivitaeten.add(new Sport(data.getDoubleExtra(TAG_DAUER, 0), data.getLongExtra(TAG_DATE, 0), data.getStringExtra(TAG_TYPE)));
-
-            TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-
-            TextView tvDate = new TextView(this.getApplicationContext());
-            tvDate.setText("" + sdf.format(data.getLongExtra(TAG_DATE, 0)));
-            tvDate.setLayoutParams(params);
-            tvDate.setTextSize(20f);
-
-            TextView tvType = new TextView(this.getApplicationContext());
-            tvType.setText("" + data.getDoubleExtra(TAG_TYPE, 1.1));
-            tvType.setLayoutParams(params);
-            tvType.setTextSize(20f);
-
-            TextView tvDauer = new TextView(this.getApplicationContext());
-            tvDauer.setText("" + data.getDoubleExtra(TAG_DAUER, 1.1));
-            tvDauer.setLayoutParams(params);
-            tvDauer.setTextSize(20f);
-
-            rows.add(new TableRow(this.getApplicationContext()));
-            rows.get(rows.size() - 1).addView(tvDate);
-            rows.get(rows.size() - 1).addView(tvType);
-            rows.get(rows.size() - 1).addView(tvDauer);
-
-            sportLayout.addView(rows.get(rows.size() - 1));
-
+            loadSportEinheitenFromDatabase();
         }
     }
 
@@ -85,32 +61,7 @@ public class SportActivity extends Activity {
 
         intent = new Intent(this.getApplicationContext(), this.getClass());
 
-        for(int i = 0; i < sportAktivitaeten.size(); i++) {
-
-            TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-
-            TextView tvDate = new TextView(this.getApplicationContext());
-            tvDate.setText("" + sdf.format(sportAktivitaeten.get(i).getDateMillis()));
-            tvDate.setLayoutParams(params);
-            tvDate.setTextSize(20f);
-
-            TextView tvType = new TextView(this.getApplicationContext());
-            tvType.setText("" + sportAktivitaeten.get(i).getType());
-            tvType.setLayoutParams(params);
-            tvType.setTextSize(20f);
-
-            TextView tvDauer = new TextView(this.getApplicationContext());
-            tvDauer.setText("" + sportAktivitaeten.get(i).getDauer());
-            tvDauer.setLayoutParams(params);
-            tvDauer.setTextSize(20f);
-
-            rows.add(new TableRow(this.getApplicationContext()));
-            rows.get(i).addView(tvDate);
-            rows.get(i).addView(tvType);
-            rows.get(i).addView(tvDauer);
-
-            sportLayout.addView(rows.get(i));
-        }
+        loadSportEinheitenFromDatabase();
 
         addSport = (Button) findViewById(R.id.buttonSportHinzufuegen);
         addSport.setOnClickListener(new View.OnClickListener() {
@@ -121,5 +72,58 @@ public class SportActivity extends Activity {
             }
         });
 
+    }
+
+    private void loadSportEinheitenFromDatabase() {
+
+        Cursor c = MausisFitnessAppMainActivity.db.rawQuery("SELECT * FROM " + MausisFitnessAppMainActivity.TABLE_SPORT_NAME + " ORDER BY year DESC, month DESC, day DESC" , null);
+
+        sportLayout.removeAllViews();
+
+        if(c.moveToFirst()) {
+            do {
+
+                TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+
+                TableRow tempRow = new TableRow(this.getApplicationContext(), null);
+                TextView tvDate = new TextView(this.getApplicationContext());
+                TextView tvType = new TextView(this.getApplicationContext());
+                TextView tvDauer = new TextView(this.getApplicationContext());
+
+                String currentDate = "";
+
+                if(c.getString(c.getColumnIndex("day")).length() == 1) {
+                    currentDate += "0" + c.getString(c.getColumnIndex("day")) + ".";
+                } else {
+                    currentDate += c.getString(c.getColumnIndex("day")) + ".";
+                }
+
+                if(c.getString(c.getColumnIndex("month")).length() == 1) {
+                    currentDate += "0" + c.getString(c.getColumnIndex("month")) + ".";
+                } else {
+                    currentDate += c.getString(c.getColumnIndex("month")) + ".";
+                }
+                currentDate += c.getString(c.getColumnIndex("year"));
+
+                tvDate.setLayoutParams(params);
+                tvDate.setTextSize(20f);
+                tvDate.setText(currentDate);
+
+                tvType.setLayoutParams(params);
+                tvType.setTextSize(20f);
+                tvType.setText(c.getString(c.getColumnIndex("type")));
+
+                tvDauer.setLayoutParams(params);
+                tvDauer.setTextSize(20f);
+                tvDauer.setText(c.getString(c.getColumnIndex("dauer")));
+
+                tempRow.addView(tvDate);
+                tempRow.addView(tvType);
+                tempRow.addView(tvDauer);
+
+                sportLayout.addView(tempRow);
+
+            } while(c.moveToNext());
+        }
     }
 }

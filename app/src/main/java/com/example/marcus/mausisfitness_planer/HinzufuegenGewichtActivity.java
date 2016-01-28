@@ -5,13 +5,21 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class HinzufuegenGewichtActivity extends Activity {
 
     private Intent intent;
     private Button buttonSendFormular;
     private EditText etGewicht;
+    private CheckBox checkBox;
+    private DatePicker datePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +38,45 @@ public class HinzufuegenGewichtActivity extends Activity {
 
                 Double temp = Double.parseDouble(etGewicht.getText().toString());
 
-                intent.putExtra(GewichtActivity.TAG_GEWICHT, temp);
-                intent.putExtra(GewichtActivity.TAG_DATE, System.currentTimeMillis());
+                Calendar cal = Calendar.getInstance();
+
+                if (checkBox.isChecked()) {
+                    MausisFitnessAppMainActivity.db.execSQL("" +
+                            "INSERT INTO "
+                            + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
+                            + cal.get(Calendar.DAY_OF_MONTH) + ", "
+                            + (1 + cal.get(Calendar.MONTH)) + ", "
+                            + cal.get(Calendar.YEAR) + ", "
+                            + temp + ");");
+                } else {
+                    MausisFitnessAppMainActivity.db.execSQL("" +
+                            "INSERT INTO "
+                            + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
+                            + datePicker.getDayOfMonth() + ", "
+                            + (1 + datePicker.getMonth()) + ", "
+                            + datePicker.getYear() + ", "
+                            + temp + ");");
+                }
+
+
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
+
+        checkBox = (CheckBox) findViewById(R.id.checkBoxHeute);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(checkBox.isChecked()) {
+                    datePicker.setVisibility(View.INVISIBLE);
+                } else {
+                    datePicker.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        datePicker = (DatePicker) findViewById(R.id.datePicker);
 
     }
 

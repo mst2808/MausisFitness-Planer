@@ -2,11 +2,13 @@ package com.example.marcus.mausisfitness_planer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -25,7 +28,6 @@ public class GewichtActivity extends Activity {
     public static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
 
-    private ArrayList<Gewicht> gewichte = new ArrayList<Gewicht>();
     private TableLayout gewichteLayout;
     private ArrayList<TableRow> rows = new ArrayList<TableRow>();
     private Button addGewicht;
@@ -48,26 +50,57 @@ public class GewichtActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == Activity.RESULT_OK) {
-            gewichte.add(new Gewicht(data.getDoubleExtra(TAG_GEWICHT, 0), data.getLongExtra(TAG_DATE, 0)));
+            loadGewichteFromDatabase();
+        }
+    }
 
-            TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+    private void loadGewichteFromDatabase() {
 
-            TextView tvDate = new TextView(this.getApplicationContext());
-            tvDate.setText("" + sdf.format(data.getLongExtra(TAG_DATE, 0)));
-            tvDate.setLayoutParams(params);
-            tvDate.setTextSize(20f);
+        Cursor c = MausisFitnessAppMainActivity.db.rawQuery("SELECT * FROM " + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " ORDER BY year DESC, month DESC, day DESC" , null);
 
-            TextView tvValue = new TextView(this.getApplicationContext());
-            tvValue.setText("" + data.getDoubleExtra(TAG_GEWICHT, 1.1));
-            tvValue.setLayoutParams(params);
-            tvValue.setTextSize(20f);
+        gewichteLayout.removeAllViews();
 
-            rows.add(new TableRow(this.getApplicationContext()));
-            rows.get(rows.size() - 1).addView(tvDate);
-            rows.get(rows.size() - 1).addView(tvValue);
+        if(c.moveToFirst()) {
+            do {
 
-            gewichteLayout.addView(rows.get(rows.size() - 1));
+                TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
 
+                TableRow tempRow = new TableRow(this.getApplicationContext(), null);
+                TextView tvDate = new TextView(this.getApplicationContext());
+                TextView tvGewicht = new TextView(this.getApplicationContext());
+
+                String currentDate = "";
+
+                if(c.getString(c.getColumnIndex("day")).length() == 1) {
+                    currentDate += "0" + c.getString(c.getColumnIndex("day")) + ".";
+                } else {
+                    currentDate += c.getString(c.getColumnIndex("day")) + ".";
+                }
+
+                if(c.getString(c.getColumnIndex("month")).length() == 1) {
+                    currentDate += "0" + c.getString(c.getColumnIndex("month")) + ".";
+                } else {
+                    currentDate += c.getString(c.getColumnIndex("month")) + ".";
+                }
+
+
+
+                currentDate += c.getString(c.getColumnIndex("year"));
+
+                tvDate.setLayoutParams(params);
+                tvDate.setTextSize(20f);
+                tvDate.setText(currentDate);
+
+                tvGewicht.setLayoutParams(params);
+                tvGewicht.setTextSize(20f);
+                tvGewicht.setText(c.getString(c.getColumnIndex("wert")));
+
+                tempRow.addView(tvDate);
+                tempRow.addView(tvGewicht);
+
+                gewichteLayout.addView(tempRow);
+
+            } while(c.moveToNext());
         }
     }
 
@@ -77,26 +110,7 @@ public class GewichtActivity extends Activity {
 
         intent = new Intent(this.getApplicationContext(), this.getClass());
 
-        for(int i = 0; i < gewichte.size(); i++) {
-
-            TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-
-            TextView tvDate = new TextView(this.getApplicationContext());
-            tvDate.setText("" + sdf.format(gewichte.get(i).getDateMillis()));
-            tvDate.setLayoutParams(params);
-            tvDate.setTextSize(20f);
-
-            TextView tvValue = new TextView(this.getApplicationContext());
-            tvValue.setText("" + gewichte.get(i).getGewicht());
-            tvValue.setLayoutParams(params);
-            tvValue.setTextSize(20f);
-
-            rows.add(new TableRow(this.getApplicationContext()));
-            rows.get(i).addView(tvDate);
-            rows.get(i).addView(tvValue);
-
-            gewichteLayout.addView(rows.get(i));
-        }
+        loadGewichteFromDatabase();
 
         addGewicht = (Button) findViewById(R.id.buttonGewichtHinzufuegen);
         addGewicht.setOnClickListener(new View.OnClickListener() {
@@ -108,4 +122,5 @@ public class GewichtActivity extends Activity {
         });
 
     }
+
 }

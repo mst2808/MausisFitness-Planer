@@ -67,8 +67,40 @@
     </TableRow>
 
     <TableRow
-        android:layout_weight="8">
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/rowHeute"
+        android:layout_weight="0">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Heute"
+            android:id="@+id/textViewHeute"
+            android:layout_weight="1"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBoxHeute"
+            android:layout_column="1"
+            android:layout_gravity="right"
+            android:checked="true" />
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_weight="6"
+        android:layout_gravity="end">
+
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/datePicker"
+            android:layout_column="0"
+            android:visibility="invisible"/>
     </TableRow>
 
     <TableRow
