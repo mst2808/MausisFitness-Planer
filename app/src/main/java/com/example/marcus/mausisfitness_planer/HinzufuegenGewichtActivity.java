@@ -40,22 +40,45 @@ public class HinzufuegenGewichtActivity extends Activity {
 
                 Calendar cal = Calendar.getInstance();
 
-                if (checkBox.isChecked()) {
-                    MausisFitnessAppMainActivity.db.execSQL("" +
-                            "INSERT INTO "
-                            + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
-                            + cal.get(Calendar.DAY_OF_MONTH) + ", "
-                            + (1 + cal.get(Calendar.MONTH)) + ", "
-                            + cal.get(Calendar.YEAR) + ", "
-                            + temp + ");");
-                } else {
-                    MausisFitnessAppMainActivity.db.execSQL("" +
-                            "INSERT INTO "
-                            + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
-                            + datePicker.getDayOfMonth() + ", "
-                            + (1 + datePicker.getMonth()) + ", "
-                            + datePicker.getYear() + ", "
-                            + temp + ");");
+                // wenn ID != -1 dann wird ein eintrag bearbeitet!
+                if (intent.getIntExtra("ID", -1) != -1) {
+                    if (checkBox.isChecked()) {
+                        MausisFitnessAppMainActivity.db.execSQL("" +
+                                "UPDATE " + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " SET " +
+                                "day=" + cal.get(Calendar.DAY_OF_MONTH) + ", " +
+                                "month=" + (1 + cal.get(Calendar.MONTH)) + ", " +
+                                "year=" + cal.get(Calendar.YEAR) + ", " +
+                                "wert=" + temp + " " +
+                                "WHERE id=" + intent.getIntExtra("ID", -1) + ";");
+                    } else {
+                        MausisFitnessAppMainActivity.db.execSQL("" +
+                                "UPDATE " + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " SET " +
+                                "day=" + datePicker.getDayOfMonth() + ", " +
+                                "month=" + (1 + datePicker.getMonth()) + ", " +
+                                "year=" + datePicker.getYear() + ", " +
+                                "wert=" + temp + " " +
+                                "WHERE id=" + intent.getIntExtra("ID", -1) + ";");
+                    }
+                }
+                // wenn ID = -1 dann wird ein neuer wert hinzugefügt!
+                else {
+                    if (checkBox.isChecked()) {
+                        MausisFitnessAppMainActivity.db.execSQL("" +
+                                "INSERT INTO "
+                                + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
+                                + cal.get(Calendar.DAY_OF_MONTH) + ", "
+                                + (1 + cal.get(Calendar.MONTH)) + ", "
+                                + cal.get(Calendar.YEAR) + ", "
+                                + temp + ");");
+                    } else {
+                        MausisFitnessAppMainActivity.db.execSQL("" +
+                                "INSERT INTO "
+                                + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME + " (day, month, year, wert) VALUES ("
+                                + datePicker.getDayOfMonth() + ", "
+                                + (1 + datePicker.getMonth()) + ", "
+                                + datePicker.getYear() + ", "
+                                + temp + ");");
+                    }
                 }
 
 

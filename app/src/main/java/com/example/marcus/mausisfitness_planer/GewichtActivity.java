@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ public class GewichtActivity extends Activity {
     public static final int PICK_CONTACT_REQUEST = 1;  // The request code
 
 
-    private TableLayout gewichteLayout;
+    private LinearLayout gewichteLayout;
     private ArrayList<TableRow> rows = new ArrayList<TableRow>();
     private Button addGewicht;
     private Intent intent;
@@ -62,41 +63,21 @@ public class GewichtActivity extends Activity {
 
         if(c.moveToFirst()) {
             do {
+                int currentValueID = c.getInt(c.getColumnIndex("id"));
+                int currentValueGewicht = c.getInt(c.getColumnIndex("wert"));
+                String currentValueDay = c.getString(c.getColumnIndex("day"));
+                String currentValueMonth = c.getString(c.getColumnIndex("month"));
+                String currentValueYear = c.getString(c.getColumnIndex("year"));
 
-                TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-
-                TableRow tempRow = new TableRow(this.getApplicationContext(), null);
-                TextView tvDate = new TextView(this.getApplicationContext());
-                TextView tvGewicht = new TextView(this.getApplicationContext());
-
-                String currentDate = "";
-
-                if(c.getString(c.getColumnIndex("day")).length() == 1) {
-                    currentDate += "0" + c.getString(c.getColumnIndex("day")) + ".";
-                } else {
-                    currentDate += c.getString(c.getColumnIndex("day")) + ".";
-                }
-
-                if(c.getString(c.getColumnIndex("month")).length() == 1) {
-                    currentDate += "0" + c.getString(c.getColumnIndex("month")) + ".";
-                } else {
-                    currentDate += c.getString(c.getColumnIndex("month")) + ".";
-                }
-
-
-
-                currentDate += c.getString(c.getColumnIndex("year"));
-
-                tvDate.setLayoutParams(params);
-                tvDate.setTextSize(20f);
-                tvDate.setText(currentDate);
-
-                tvGewicht.setLayoutParams(params);
-                tvGewicht.setTextSize(20f);
-                tvGewicht.setText(c.getString(c.getColumnIndex("wert")));
-
-                tempRow.addView(tvDate);
-                tempRow.addView(tvGewicht);
+                final MyRowLayout tempRow = new MyRowLayout(this.getApplicationContext(), currentValueID, currentValueGewicht, currentValueDay, currentValueMonth, currentValueYear);
+                tempRow.getBtEdit().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intent.setClass(v.getContext(), HinzufuegenGewichtActivity.class);
+                        intent.putExtra("ID", tempRow.getID());
+                        startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                    }
+                });
 
                 gewichteLayout.addView(tempRow);
 
@@ -106,7 +87,7 @@ public class GewichtActivity extends Activity {
 
     private void init() {
 
-        gewichteLayout = (TableLayout) findViewById(R.id.layoutGewichtDaten);
+        gewichteLayout = (LinearLayout) findViewById(R.id.layoutGewichtDaten);
 
         intent = new Intent(this.getApplicationContext(), this.getClass());
 
@@ -116,11 +97,11 @@ public class GewichtActivity extends Activity {
         addGewicht.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                intent.putExtra("ID", -1);
                 intent.setClass(v.getContext(), HinzufuegenGewichtActivity.class);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
 
     }
-
 }

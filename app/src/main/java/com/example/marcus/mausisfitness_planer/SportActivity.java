@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -27,9 +28,7 @@ public class SportActivity extends Activity {
 
     public static final int PICK_CONTACT_REQUEST = 2;  // The request code
 
-
-    private ArrayList<Sport> sportAktivitaeten = new ArrayList<Sport>();
-    private TableLayout sportLayout;
+    private LinearLayout sportLayout;
     private ArrayList<TableRow> rows = new ArrayList<TableRow>();
     private Button addSport;
     private Intent intent;
@@ -57,7 +56,7 @@ public class SportActivity extends Activity {
 
     private void init() {
 
-        sportLayout = (TableLayout) findViewById(R.id.layoutSportDaten);
+        sportLayout = (LinearLayout) findViewById(R.id.layoutSportDaten);
 
         intent = new Intent(this.getApplicationContext(), this.getClass());
 
@@ -68,6 +67,7 @@ public class SportActivity extends Activity {
             @Override
             public void onClick(View v) {
                 intent.setClass(v.getContext(), HinzufuegenSportActivity.class);
+                intent.putExtra("ID", -1);
                 startActivityForResult(intent, PICK_CONTACT_REQUEST);
             }
         });
@@ -83,43 +83,22 @@ public class SportActivity extends Activity {
         if(c.moveToFirst()) {
             do {
 
-                TableRow.LayoutParams params = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+                int currentValueID = c.getInt(c.getColumnIndex("id"));
+                int currentValueGewicht = c.getInt(c.getColumnIndex("dauer"));
+                String currentValueType = c.getString(c.getColumnIndex("type"));
+                String currentValueDay = c.getString(c.getColumnIndex("day"));
+                String currentValueMonth = c.getString(c.getColumnIndex("month"));
+                String currentValueYear = c.getString(c.getColumnIndex("year"));
 
-                TableRow tempRow = new TableRow(this.getApplicationContext(), null);
-                TextView tvDate = new TextView(this.getApplicationContext());
-                TextView tvType = new TextView(this.getApplicationContext());
-                TextView tvDauer = new TextView(this.getApplicationContext());
-
-                String currentDate = "";
-
-                if(c.getString(c.getColumnIndex("day")).length() == 1) {
-                    currentDate += "0" + c.getString(c.getColumnIndex("day")) + ".";
-                } else {
-                    currentDate += c.getString(c.getColumnIndex("day")) + ".";
-                }
-
-                if(c.getString(c.getColumnIndex("month")).length() == 1) {
-                    currentDate += "0" + c.getString(c.getColumnIndex("month")) + ".";
-                } else {
-                    currentDate += c.getString(c.getColumnIndex("month")) + ".";
-                }
-                currentDate += c.getString(c.getColumnIndex("year"));
-
-                tvDate.setLayoutParams(params);
-                tvDate.setTextSize(20f);
-                tvDate.setText(currentDate);
-
-                tvType.setLayoutParams(params);
-                tvType.setTextSize(20f);
-                tvType.setText(c.getString(c.getColumnIndex("type")));
-
-                tvDauer.setLayoutParams(params);
-                tvDauer.setTextSize(20f);
-                tvDauer.setText(c.getString(c.getColumnIndex("dauer")));
-
-                tempRow.addView(tvDate);
-                tempRow.addView(tvType);
-                tempRow.addView(tvDauer);
+                final MyRowLayout tempRow = new MyRowLayout(this.getApplicationContext(), currentValueID, currentValueType, currentValueGewicht, currentValueDay, currentValueMonth, currentValueYear);
+                tempRow.getBtEdit().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intent.setClass(v.getContext(), HinzufuegenSportActivity.class);
+                        intent.putExtra("ID", tempRow.getID());
+                        startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                    }
+                });
 
                 sportLayout.addView(tempRow);
 

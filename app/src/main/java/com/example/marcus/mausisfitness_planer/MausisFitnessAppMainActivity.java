@@ -19,18 +19,20 @@ public class MausisFitnessAppMainActivity extends TabActivity {
     public static final String TABLE_SPORT_NAME = "SportEinheiten";
     public static final String TABLE_GEWICHT_NAME = "GewichtWerte";
 
-    private final String CREATE_GEWICHT_TABLE = "CREATE TABLE "
+    private final String CREATE_GEWICHT_TABLE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_GEWICHT_NAME
-            + "(id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, month INTEGER, year INTEGER, wert REAL);";
+            + " (id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER, month INTEGER, year INTEGER, wert REAL);";
 
-    private final String CREATE_SPORT_TABLE = "CREATE TABLE "
+    private final String CREATE_SPORT_TABLE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_SPORT_NAME
-            + "(id INTEGER PRIMARY KEY AUTOINCREMENT, type STRING, day INTEGER, month INTEGER, year INTEGER, dauer REAL);";
+            + " (id INTEGER PRIMARY KEY AUTOINCREMENT, type STRING, day INTEGER, month INTEGER, year INTEGER, dauer REAL);";
 
     public static SQLiteDatabase db;
 
     private TabSpec tabSport;
     private TabSpec tabGewicht;
+
+    public static GewichtActivity gewichtActivity;
 
 
     private LinearLayout layoutTabs;
@@ -44,15 +46,15 @@ public class MausisFitnessAppMainActivity extends TabActivity {
         db = openOrCreateDatabase(DATABASE_NAME, SQLiteDatabase.CREATE_IF_NECESSARY, null);
 
         // Tabelle löschen
-        try {
-            db.execSQL("DROP TABLE " + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME);
-            db.execSQL("DROP TABLE " + MausisFitnessAppMainActivity.TABLE_SPORT_NAME);
-        } catch(Exception ex) {
-            Log.d("MYLOG ", "Eine der Tabellen war nicht vorhanden aber egal xD");
-        }
+//        try {
+//            db.execSQL("DROP TABLE " + MausisFitnessAppMainActivity.TABLE_GEWICHT_NAME);
+//            db.execSQL("DROP TABLE " + MausisFitnessAppMainActivity.TABLE_SPORT_NAME);
+//        } catch(Exception ex) {
+//            Log.d("MYLOG ", "Eine der Tabellen war nicht vorhanden aber egal xD");
+//        }
 
-         db.execSQL(CREATE_GEWICHT_TABLE);
-         db.execSQL(CREATE_SPORT_TABLE);
+        db.execSQL(CREATE_GEWICHT_TABLE);
+        db.execSQL(CREATE_SPORT_TABLE);
 
         // create the TabHost that will contain the Tabs
         TabHost tabHost = (TabHost) findViewById(android.R.id.tabhost);
